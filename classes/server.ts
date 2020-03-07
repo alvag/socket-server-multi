@@ -1,7 +1,6 @@
 import express from 'express';
 import socketIO from 'socket.io'
 import http from 'http';
-import * as socket from '../sockets/sockets';
 
 export default class Server {
 
@@ -19,7 +18,6 @@ export default class Server {
 
 		this.io = socketIO(this.httpServer);
 
-		this.listenSockets();
 	}
 
 	public static get instance() {
@@ -28,24 +26,6 @@ export default class Server {
 
 	start(callback: () => void) {
 		this.httpServer.listen(this.port, callback);
-	}
-
-	private listenSockets() {
-		this.io.on('connection', client => {
-
-			// Conectar cliente
-			socket.clientConnect(client);
-
-			// Configurar usuario
-			socket.configUser(client, this.io);
-
-			socket.getUsers(client, this.io);
-
-			socket.message(client, this.io);
-
-			socket.disconnect(client, this.io);
-
-		})
 	}
 
 }
