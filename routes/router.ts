@@ -1,31 +1,27 @@
 import { Router, Request, Response } from 'express';
 import Server from '../classes/server';
-import { Socket } from 'socket.io';
 import { usersConnected } from '../sockets/sockets';
+import { GraficaData } from '../classes/grafica';
 
 const router = Router();
+const grafica = new GraficaData();
 
-router.get( '/messages', ( req: Request, res: Response ) => {
-	res.json( { ok: true } );
+router.get( '/grafica', ( req: Request, res: Response ) => {
+	res.json( grafica.getData() );
 } );
 
-router.post( '/messages', ( req: Request, res: Response ) => {
+router.post( '/grafica', ( req: Request, res: Response ) => {
 
-	const message = req.body.message;
-	const from = req.body.from;
-	const id = req.params.id;
+	const month = req.body.month;
+	const value = Number(req.body.value);
 
-	const payload = {
-		from, message
-	};
+	grafica.incrementValue(month, value);
+
 
 	const server = Server.instance;
-	server.io.emit( 'new-message', payload );
+	server.io.emit( 'grafico-data', grafica.getData() );
 
-	res.json( {
-		ok: true,
-		message, from, id
-	} );
+	res.json( grafica.getData());
 } );
 
 router.post( '/messages/:id', ( req: Request, res: Response ) => {
