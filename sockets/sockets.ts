@@ -2,9 +2,10 @@ import { Socket } from 'socket.io';
 import socketIO from 'socket.io';
 import { Map } from '../classes/map';
 import { Marker } from '../classes/marker';
+import { Map2 } from '../classes/map2';
 
-export const map = new Map();
-
+// export const map = new Map();
+export const map = new Map2();
 
 export const mapSockets = (client: Socket, io: socketIO.Server) => {
 
